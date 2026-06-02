@@ -8,7 +8,7 @@ const CONFIG = {
   SUPABASE_URL: "https://chqztiisgnpmufvfzkuf.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_5LbHoEAG-Um9q8c4we6psw_T1ozdGaS",
 
-  adminCode: "ADMIN2026",
+  adminCode: "zt-admin-9x26",
 
   points: {
     exact: 4,
