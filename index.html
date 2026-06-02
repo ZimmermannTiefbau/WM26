@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zimmermann Tiefbau Tippspiel</title>
+  <meta name="theme-color" content="#07182f">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="stadium-bg"></div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="ball">⚽</div>
+        <div>
+          <div class="kicker">Zimmermann Tiefbau</div>
+          <h1>WM Tippspiel 2026</h1>
+        </div>
+      </div>
+      <button class="ghost small" id="logoutBtn" hidden>Abmelden</button>
+    </header>
+
+    <section id="loginView" class="screen active">
+      <div class="hero-card">
+        <p class="overline">Interne Firmenrunde</p>
+        <h2>Tippen. Punkten. Angeben.</h2>
+        <p class="muted">Teilnehmercode eingeben und loslegen.</p>
+
+        <div id="setupWarning" class="warning" hidden>
+          Supabase ist noch nicht verbunden. Bitte in <strong>config.js</strong> deine SUPABASE_URL und SUPABASE_ANON_KEY eintragen.
+        </div>
+
+        <div class="login-box">
+          <label>Teilnehmercode</label>
+          <input id="codeInput" autocomplete="off" placeholder="TOBIAS, ROLAND oder BENNI">
+          <button class="primary" id="loginBtn">Einsteigen</button>
+          <p class="hint">Teilnehmer: <strong>TOBIAS</strong>, <strong>ROLAND</strong>, <strong>BENNI</strong> · Admin: <strong>ADMIN2026</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="mainView" class="screen">
+      <div class="user-strip">
+        <div>
+          <div class="muted tiny">Angemeldet als</div>
+          <strong id="currentUserName">-</strong>
+        </div>
+        <div class="pill" id="currentPoints">0 Punkte</div>
+      </div>
+
+      <nav class="tabs">
+        <button class="tab active" data-tab="dashboard">Start</button>
+        <button class="tab" data-tab="matchtips">Spiele</button>
+        <button class="tab" data-tab="specialtips">Spezialtipps</button>
+        <button class="tab" data-tab="ranking">Rangliste</button>
+        <button class="tab admin-only" data-tab="admin">Admin</button>
+      </nav>
+
+      <main>
+        <section id="dashboard" class="tab-view active">
+          <div class="grid two">
+            <article class="card dark-card">
+              <p class="overline">Nächster Schritt</p>
+              <h2>Tipps abgeben</h2>
+              <p class="muted">Ergebnisse tippen, Gruppensieger setzen und Weltmeister festlegen.</p>
+              <button class="primary" data-go="matchtips">Zu den Spielen</button>
+            </article>
+
+            <article class="card">
+              <p class="overline">Dein Stand</p>
+              <div id="playerSummary"></div>
+            </article>
+          </div>
+
+          <article class="card">
+            <div class="section-title">
+              <h2>Aktuelle Rangliste</h2>
+              <span class="tag">online</span>
+            </div>
+            <div id="miniRanking"></div>
+          </article>
+        </section>
+
+        <section id="matchtips" class="tab-view">
+          <div class="section-title">
+            <div>
+              <p class="overline">Ergebnistipps</p>
+              <h2>Spiele</h2>
+            </div>
+            <button class="primary compact" id="saveMatchTips">Spieltipps speichern</button>
+          </div>
+          <div id="matchesList"></div>
+        </section>
+
+        <section id="specialtips" class="tab-view">
+          <div class="grid two">
+            <article class="card">
+              <div class="section-title">
+                <div>
+                  <p class="overline">Einmalig</p>
+                  <h2>Weltmeister-Tipp</h2>
+                </div>
+                <span class="tag locked-tag" id="championLockTag">offen</span>
+              </div>
+              <p class="muted">Nach dem Speichern ist dieser Tipp gesperrt und kann nicht mehr geändert werden.</p>
+              <select id="championSelect"></select>
+              <button class="primary" id="saveChampionTip">Weltmeister speichern</button>
+            </article>
+
+            <article class="card">
+              <div class="section-title">
+                <div>
+                  <p class="overline">Gruppen</p>
+                  <h2>Gruppensieger</h2>
+                </div>
+                <button class="primary compact" id="saveGroupTips">Speichern</button>
+              </div>
+              <div id="groupWinnerList"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="ranking" class="tab-view">
+          <article class="card">
+            <div class="section-title">
+              <div>
+                <p class="overline">Auswertung</p>
+                <h2>Rangliste</h2>
+              </div>
+              <span class="tag">4 / 3 / 2 Punkte</span>
+            </div>
+            <div id="rankingList"></div>
+          </article>
+        </section>
+
+        <section id="admin" class="tab-view">
+          <div class="grid two">
+            <article class="card">
+              <p class="overline">Admin</p>
+              <h2>Ergebnisse eintragen</h2>
+              <div id="adminResultsList"></div>
+              <button class="primary" id="saveResults">Ergebnisse speichern</button>
+            </article>
+
+            <article class="card">
+              <p class="overline">Admin</p>
+              <h2>Finale Auswertung</h2>
+              <label>Weltmeister</label>
+              <select id="actualChampionSelect"></select>
+
+              <div class="space"></div>
+              <h3>Offizielle Gruppensieger</h3>
+              <div id="actualGroupWinnerList"></div>
+              <button class="primary" id="saveActualSpecials">Spezial-Auswertung speichern</button>
+            </article>
+          </div>
+
+          <article class="card">
+            <p class="overline">Kontrolle</p>
+            <h2>Alle Tipps</h2>
+            <div id="allTipsAdmin"></div>
+          </article>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <div id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
